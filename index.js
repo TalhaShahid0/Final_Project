@@ -8,7 +8,7 @@ app.set('view engine','ejs')
 
 app.get('/',function(req,res){
 
-    res.send('Hello')
+    res.render('pages/index')
 })
 
 app.listen(8080,function(err){
