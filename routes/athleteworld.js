@@ -22,7 +22,7 @@ router.get("/userlogout",functions.userlogout);
 router.get("/", (req, res) => { res.render("users/index"); });
 //Routing for signup
 router.get("/Signup", (req, res) => { res.render("users/Signup"); });
-//TAking data from user
+//Taking data from user
 router.post("/Signup", functions.signup);
 //code verification
 router.post("/verifycode", functions.codeverification);
@@ -30,7 +30,18 @@ router.post("/verifycode", functions.codeverification);
 router.post("/RegisterUser", functions.register);
 //routing for signin
 router.get("/Signin", (req, res) => { res.render("users/Signin"); });
+//routing for about
 router.get("/about", (req, res) => { res.render("users/about"); });
+//routing for blog-home
+router.get("/blog-home", (req, res) => { res.render("users/blog-home"); });
+//routing for blog-post
+router.get("/blog-post", (req, res) => { res.render("users/blog-post"); });
+//routing for contact
+router.get("/contact", (req, res) => { res.render("users/contact"); });
+//routing for faq
+router.get("/faq", (req, res) => { res.render("users/faq"); });
+//routing for index
+router.get("/index", (req, res) => { res.render("users/index"); });
 //fetcing data from 
 router.post("/Signin", functions.signin);
 //routing for password change request.
