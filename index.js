@@ -24,5 +24,5 @@ app.use("/", routes);
 
 app.listen(5000, (err) => {
   if (err) throw err;
-  console.log(`Server Listening At Port 4000`);
+  console.log(`Server Listening At Port 5000`);
 })

@@ -30,6 +30,7 @@ router.post("/verifycode", functions.codeverification);
 router.post("/RegisterUser", functions.register);
 //routing for signin
 router.get("/Signin", (req, res) => { res.render("users/Signin"); });
+router.get("/about", (req, res) => { res.render("users/about"); });
 //fetcing data from 
 router.post("/Signin", functions.signin);
 //routing for password change request.
