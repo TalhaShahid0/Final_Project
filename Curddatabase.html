@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            background-image: linear-gradient(purple, blue);
+            margin: 15px 0px 0px 0px;
+            height: 657px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 5px 0px;
+        }
+
+        form {
+            margin-left: 20px;
+            width: 300px;
+        }
+
+        .box {
+            padding-top: 10px;
+            border-radius: 3px;
+            background-color: rgba(18, 17, 17, 0.7);
+            color: antiquewhite;
+            width: 360px;
+            height: 625px;
+            margin: auto;
+        }
+
+        form label {
+            margin-top: 10px;
+        }
+
+        .form-control small {
+            visibility: hidden;
+        }
+
+        #container1 {
+            border-radius: 5px;
+            padding: 0px 0px 0px 10px;
+            display: grid;
+        }
+
+        #container {
+            border-radius: 5px;
+            padding: 0px 0px 0px 10px;
+            display: grid;
+        }
+
+        #container.error span {
+            color: red;
+            font-size: x-small;
+            padding-top: 2px;
+        }
+
+        #container.success span {
+            display: none;
+        }
+
+        #container2 {
+            padding: 0px 0px 0px 10px;
+            border-radius: 5px;
+            border: 5px burlywood;
+        }
+
+        .button {
+            font-size: 50px;
+        }
+
+        #submit {
+            margin-top: 20px;
+            padding: 7px 30px;
+            border-radius: 20px;
+            border: none;
+        }
+
+        #submit:hover {
+            background-color: grey;
+        }
+
+        #country,
+        #fname,
+        #lname,
+        #email,
+        #psw,
+        #cnic,
+        #phone,
+        #age {
+            padding: 3px 0px 3px 10px;
+            outline: none;
+            border-radius: 6px;
+            border: none;
+        }
+
+        h3 {
+            margin: 0px;
+            padding-top: 10px;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1>SIGN UP</h1>
+        <form action="" id="ff">
+            <div id="container1">
+                <div id="container">
+                    <label for="fname"><b>First Name</b></label>
+                    <input type="text" id="fname" name="fname">
+                    <span></span>
+                </div>
+
+                <div id="container">
+                    <label for="lname"><b>Last Name</b></label>
+                    <input type="text" id="lname" name="lname">
+                    <span></span>
+                </div>
+
+                <div id="container">
+                    <label for="email"><b>Email</b></label>
+                    <input type="text" id="email" name="email" placeholder="email@address.com">
+                    <span></span>
+                </div>
+
+                <div id="container">
+                    <label for="psw"><b>Password</b></label>
+                    <input type="text" id="psw" name="psw">
+                    <span></span>
+                </div>
+
+                <div id="container">
+                    <label for="cnc"><b>CNIC</b></label>
+                    <input id="cnic" type="text" placeholder="XXXXX-XXXXXXX-X">
+                    <span></span>
+                </div>
+
+                <div id="container">
+                    <label for="ph"><b>Phone Number</b></label>
+                    <input type="text" id="phone" name="phone number" placeholder="+XXXXXXXXXXXX">
+                    <span></span>
+                </div>
+
+                <div id="container">
+                    <label for="age"> <b>Age</b></label>
+                    <input type="text" id="age" name="Age">
+                    <span></span>
+                </div>
+            </div>
+
+            <div id="container2">
+                <div id="container">
+                    <h3>Gender</h3>
+                    <div>
+                        <input type="checkbox" id="1" value="Value1" onclick="selectOnlyThis(this.id)" /> Male
+                        <input type="checkbox" id="2" value="Value1" onclick="selectOnlyThis(this.id)" /> Female
+                    </div>
+                </div>
+            </div>
+            <center> <input id="submit" type="submit" value="Submit"></center>
+    </div>
+
+    </form>
+    </div>
+ 
+</body>
+
+</html>
+
+<script>
+document.getElementById("submit").addEventListener("click", function (e) {
+    e.preventDefault();
+    validatedata();
+});
+
+var firstname = document.getElementById("fname");
+var lastname = document.getElementById("lname");
+var password = document.getElementById("psw");
+var email = document.getElementById("email");
+var cnic = document.getElementById("cnic");
+var phone = document.getElementById("phone");
+var country = document.getElementById("country");
+
+
+function validatedata() {
+
+    var phonevalue = phone.value.trim();
+
+    if (phonevalue == "") {
+        seterror(phone, "This field can't be empty");
+    }
+    else if (!(phonevalue.match(/[+][6-9]\d{11}$/))) {
+        seterror(phone, "Phone number is not valid");
+    }
+    else {
+        setsuccess(phone);
+    }
+
+    var agevalue = age.value.trim();
+
+    if (agevalue == "") {
+        seterror(age, "This field can't be empty");
+    }
+    else if (!(agevalue.match(/[0-9]$/))) {
+        seterror(age, "Age is not valid");
+    }
+    else {
+        setsuccess(age);
+    }
+
+    var cnicvalue = cnic.value.trim();
+
+    if (cnicvalue == "") {
+        seterror(cnic, "This field can't be empty");
+    }
+    else if (!(cnicvalue.match(/^[0-9+]{5}-[0-9+]{7}-[0-9]{1}$/))) {
+        seterror(cnic, "Cnic is not valid");
+    }
+    else {
+        setsuccess(cnic);
+    }
+
+    var emailvalue = email.value.trim();
+
+    if (emailvalue == "") {
+        seterror(email, "This field can't be empty");
+    }
+    else if (!isemail(emailvalue)) {
+        seterror(email, "Email is not valid");
+    }
+    else {
+        setsuccess(email);
+    }
+
+    var passwordvalue = password.value.trim();
+
+    if (passwordvalue == "") {
+        seterror(password, "This field can't be empty");
+    }
+    else if (!(passwordvalue.match(/^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[!@#\$%\^&\*])(?=.{8,})/))) {
+        seterror(password, "Password is not valid");
+    }
+    else {
+        setsuccess(password);
+    }
+
+    var firstnamevalue = firstname.value.trim();
+
+    if (firstnamevalue == "") {
+        seterror(firstname, "This field can't be empty");
+    }
+    else if (!(firstnamevalue.match(/^[A-Za-z ]*$/))) {
+        seterror(firstname, "Name should only conatain alphabets");
+    }
+    else {
+        setsuccess(firstname);
+    }
+
+    var lastnamevalue = lastname.value.trim();
+
+    if (lastnamevalue == "") {
+        seterror(lastname, "This field can't be empty");
+    }
+    else if (!(lastnamevalue.match(/^[A-Za-z ]+$/))) {
+        seterror(lastname, "Name should only conatain alphabets");
+    }
+    else {
+        setsuccess(lastname);
+    }
+
+    var countryy = countryy.value.trim();
+
+    if (countryy == "") {
+        seterror(country, "This field can't be empty");
+    }
+    else if (!(countryy.match(/^[A-Za-z ]+$/))) {
+        seterror(country, "Country should only conatain alphabets");
+    }
+    else {
+        setsuccess(country);
+    }
+
+}
+
+function isemail(e) {
+    var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    return regex.test(e);
+}
+
+function seterror(u, msg) {
+    var parent = u.parentElement;
+    parent.className = "container error";
+    var span = parent.querySelector("span");
+    span.innerText = msg;
+}
+
+function setsuccess(u) {
+    var parent = u.parentElement;
+    parent.className = "container success";
+}
+
+function selectOnlyThis(id) {
+    for (var i = 1;i <= 2; i++)
+    {
+        document.getElementById(i).checked = false;
+    }
+    document.getElementById(id).checked = true;
+}
+</script>
