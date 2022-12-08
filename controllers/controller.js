@@ -93,7 +93,7 @@ const signin = (req, res) => {
     const Role = req.body.role;
 
     let TableName = "";
-    Role == "admin" ? TableName = "ADMIN" : TableName = "USER";
+    Role == "admin" ? TableName = "admin" : TableName = "user";
 
     console.log(Role, " ", UserName, " ", Password, " ", TableName);
 
@@ -151,7 +151,7 @@ const changepassword = (req, res) => {
     const code = "200190";
 
     req.session.code = code;
-    const Query = `SELECT * from USER WHERE UserName = '${username}'`;
+    const Query = `SELECT * from user WHERE UserName = '${username}'`;
     connection.query(Query, function (err, result, fields) {
         if (err) throw err;
         if (result.length > 0) {
@@ -160,7 +160,7 @@ const changepassword = (req, res) => {
             }
 
             else {
-                const Query1 = `UPDATE USER SET password = '${password}' WHERE username = '${username}'`;
+                const Query1 = `UPDATE user SET password = '${password}' WHERE username = '${username}'`;
                 connection.query(Query1, function (err, result) {
                     if (err) throw err;
                     res.redirect("/Signin");
@@ -175,7 +175,7 @@ const changepassword = (req, res) => {
 }
 //user products view
 const products = (req, res) => {
-    const Query = "SELECT * FROM Products";
+   /* const Query = "SELECT * FROM Products";
     connection.query(Query, function (err, result) {
         if (err) throw err;
         // console.log(result);
@@ -188,7 +188,33 @@ const products = (req, res) => {
 
         );
     }
-    )
+    )*/
+    const dataCountQuery = "SELECT COUNT(*) FROM products";
+    connection.query(dataCountQuery, function (err, result) {
+        if (err) throw err;
+
+        let dataCount = result[0]["COUNT(*)"];
+        let pageNo = req.query.page ? req.query.page : 1;
+        let dataPerPages = req.query.data ? req.query.data : 4;
+        let startLimit = (pageNo - 1) * dataPerPages;
+        let totalPages = Math.ceil(dataCount / dataPerPages);
+
+        // console.log(dataCount, "\n", pageNo, "\n",dataPerPages, "\n",startLimit, "\n",totalPages, "\n");
+
+        const Query = `SELECT * FROM products LIMIT ${startLimit}, ${dataPerPages}`;
+        connection.query(Query, function (err, result) {
+            if (err) throw err;
+            // res.send(result);
+            res.render("users/products",
+                {
+                    data: result,
+                    pages: totalPages,
+                    CurrentPage: pageNo,
+                    lastPage: totalPages
+                }
+            );
+        })
+    });
 }
 //productDetails
 const productDetails = (req, res) => {
@@ -242,7 +268,7 @@ const selected = (req, res) => {
     console.log(total);
     const username = req.session.user.username;
     const status = 'NC';
-    const Query = `INSERT INTO Shoppingdetails VALUES('${username}','${pid}','${quantity}','${price}','${total}','${status}')`;
+    const Query = `INSERT INTO shoppingdetails VALUES('${username}','${pid}','${quantity}','${price}','${total}','${status}')`;
     connection.query(Query, function (err, result) {
         if (err) throw err;
         res.redirect(`/products`);
@@ -253,7 +279,7 @@ const selected = (req, res) => {
 const add_to_cart_list = (req, res) => {
     const username = req.session.user.username;
     const NC = 'NC';
-    const Query = `SELECT * from Shoppingdetails where username = '${username}' and status = '${NC}'`;
+    const Query = `SELECT * from shoppingdetails where username = '${username}' and status = '${NC}'`;
     connection.query(Query, function (err, result) {
         if (err) throw err;
         if (result.length > 0) {
@@ -295,11 +321,11 @@ const invoice = (req, res) => {
     const username = req.session.user.username;
     // console.log(username,phone,address,pcode);
     const NC = 'NC';
-    const Query = `SELECT * from Shoppingdetails where username = '${username}' and status = '${NC}'`;
+    const Query = `SELECT * from shoppingdetails where username = '${username}' and status = '${NC}'`;
     connection.query(Query, function (err, result) {
         if (err) throw err;
         //query to find total bill 
-        const Query2 = `SELECT sum(total) as pay_able_bill from Shoppingdetails where username = '${username}' and status = '${NC}'`;
+        const Query2 = `SELECT sum(total) as pay_able_bill from shoppingdetails where username = '${username}' and status = '${NC}'`;
         connection.query(Query2, function (err, result2) {
             // console.log(result2);
             if (err) throw err;
@@ -326,12 +352,12 @@ const confirmoder = (req, res) => {
     const address = req.query.address;
     const username = req.session.user.username;
     const NC = 'NC';
-    const Query = `SELECT * from Shoppingdetails where username = '${username}' and status = '${NC}'`;
+    const Query = `SELECT * from shoppingdetails where username = '${username}' and status = '${NC}'`;
 
     connection.query(Query, function (err, result) {
         if (err) throw err;
         //query to find total bill 
-        const Query2 = `SELECT sum(total) as pay_able_bill from Shoppingdetails where username = '${username}' and status = '${NC}'`;
+        const Query2 = `SELECT sum(total) as pay_able_bill from shoppingdetails where username = '${username}' and status = '${NC}'`;
         connection.query(Query2, function (err, result2) {
             // console.log(result2);
             if (err) throw err;
@@ -365,7 +391,7 @@ const confirmoder = (req, res) => {
                                         }]
                                 });
                             const c = 'C';
-                            const Query1 = `UPDATE shoppingDetails SET status = '${c}' WHERE username = '${username}'`;
+                            const Query1 = `UPDATE shoppingdetails SET status = '${c}' WHERE username = '${username}'`;
                             connection.query(Query1, function (err, result) {
                                 if (err) throw err;
                             })
@@ -436,8 +462,32 @@ const delete_from_wishlist=(req,res)=>{
         res.redirect("/view_wishlist");
     })
 }
-/*--------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------*/
+
+const resetpsw=(req,res)=>
+{
+ const username=req.session.user.username;
+ const psw=req.body.psw;
+ const npsw=req.body.npsw;
+ const Query = `select * from user where username='${username}'`;
+    connection.query(Query, function (err, result) {
+        if (err) throw err;
+        const pass=result[0].Password;
+        console.log(pass);
+        if(pass!=psw)
+        {
+            res.send('Incorrect current password');
+        }
+        else{
+            const Query2 = `update user set password='${npsw}' where username='${username}'`;
+            connection.query(Query2, function (err, result2) {
+                if (err) throw err;})
+                res.redirect("/products");
+        }
+    })
+}
+/*--------------------------------------------------------------------------
+                         Admin side
+--------------------------------------------------------------------------*/
 const Adminlogout=(req,res)=>{
     req.session.admin = null;
     res.redirect("/");
@@ -456,14 +506,14 @@ const add = (req, res) => {
     const price = req.body.price;
     const img = req.file.originalname;
     const quantity = req.body.quantity;
-    const Query2 = `Select * from PRODUCTS where pid='${pid}' `;
+    const Query2 = `Select * from products where pid='${pid}' `;
     connection.query(Query2, function (err, result2) {
         if (err) throw err;
         if (result2.length > 0) {
             res.send("Product with same ID already exist. please recheck the ID.")
         }
         else {
-            const Query = `INSERT INTO PRODUCTS  (pid,PName,Discription,Catagory,price,Picture,quantity) VALUES ('${pid}','${Name}','${dis}','${catagory}','${price}','${img}','${quantity}' )`;
+            const Query = `INSERT INTO products  (pid,PName,Discription,Catagory,price,Picture,quantity) VALUES ('${pid}','${Name}','${dis}','${catagory}','${price}','${img}','${quantity}' )`;
             connection.query(Query, function (err, result) {
                 if (err) throw err;
                 res.redirect("/stock");
@@ -475,7 +525,7 @@ const add = (req, res) => {
 }
 //admin stock view
 const stock = (req, res) => {
-    const Query = "SELECT * FROM Products";
+    const Query = "SELECT * FROM products";
     connection.query(Query, function (err, result) {
         if (err) throw err;
         // console.log(result);
@@ -493,7 +543,7 @@ const stock = (req, res) => {
 //product deletion
 const deletetion = (req, res) => {
     const id = req.params.pid;
-    const Query = `DELETE FROM PRODUCTS WHERE pid = '${id}'`;
+    const Query = `DELETE FROM products WHERE pid = '${id}'`;
     connection.query(Query, function (err, result) {
         if (err) throw err;
         res.redirect("/stock");
@@ -522,7 +572,7 @@ const update = (req, res) => {
     const img = req.file.originalname;
     const quantity = req.body.quantity;
 
-    const Query = `UPDATE Products SET PName = '${Name}', Discription = '${dis}',  Catagory = '${catagory}', price = '${price}',quantity='${quantity}' WHERE pid = '${pid}'`;
+    const Query = `UPDATE products SET PName = '${Name}', Discription = '${dis}',  Catagory = '${catagory}', price = '${price}',quantity='${quantity}' WHERE pid = '${pid}'`;
     connection.query(Query, function (err, result) {
         if (err) throw err;
         res.redirect("/stock");
@@ -530,7 +580,7 @@ const update = (req, res) => {
 }
 //admin stock view
 const users = (req, res) => {
-    const Query = "SELECT * from USER";
+    const Query = "SELECT * from user";
     connection.query(Query, function (err, result) {
         if (err) throw err;
         // console.log(result);
@@ -557,7 +607,7 @@ const deleteuser = (req, res) => {
 //List of all Confirmed placed oders by the users
 const oders=(req,res)=>{
     
-    const Query = `SELECT * from Shoppingdetails where status ='C'`;
+    const Query = `SELECT * from shoppingdetails where status ='C'`;
     connection.query(Query, function (err, result) {
         if (err) throw err;
       
@@ -594,9 +644,8 @@ const deliveredoder=(req,res)=>{
     connection.query(Query, function (err, result) {
         if (err) throw err;
        const username=result[0].username;
-       console.log(result);
        const pid=result[0].pid;
-       const quantity=result[0].qyantity;
+       const quantity=result[0].quantity;
        const price=result[0].price;
        const total=result[0].total;
        const Query2 = `insert into payment values('${username}','${pid}','${quantity}','${price}','${total}')`;
@@ -676,6 +725,95 @@ const payment=(req,res)=>{
         });
     }   
 
+  const viewfeedback=(req,res)=>{
+    const Query = `SELECT * from feedback`;
+    connection.query(Query, function (err, result) {
+        if (err) throw err;
+      
+            res.render("Admin/feedback",
+                {
+                    data: result,
+                 
+
+                }
+
+            )
+        });
+  }  
+const dashboard=(req,res)=>{
+    const C='C';
+    const Query = `select count(pid) as orders_count from shoppingdetails where status='${C}'`;
+    connection.query(Query, function (err, result) {
+        if (err) throw err;
+        const Query2 = `select sum(quantity) as sales_count from payment`;
+        connection.query(Query2, function (err, result2) {
+            if (err) throw err;
+            const Query3 = `select sum(total) as earning from payment`;
+            connection.query(Query3, function (err, result3) {
+                if (err) throw err;
+                const Query4 = `select sum(quantity) as stock from products`;
+                connection.query(Query4, function (err, result4) {
+                    if (err) throw err;
+                    res.render("Admin/adminpanel",
+                    {
+                        totalOrders:result[0].orders_count,
+                        totalSales:result2[0].sales_count,
+                        totalEarning:result3[0].earning,
+                        stock:result4[0].stock
+                    })
+                    
+                })
+            })
+        })
+       
+      
+        
+
+    })
+}
+const paymentpdf=(req,res)=>
+{
+    const Query = `SELECT * from payment`;
+
+    connection.query(Query, function (err, result) {
+        if (err) throw err;
+        //query to find total bill 
+          res.render("Admin/paymentpdf",
+                {
+                    data: result,
+                   
+                },
+                function (err, html) {
+                    pdf.create(html, options).toFile("PDF/PaymentDetails.pdf", function (err, result) {
+                        if (err) return console.log(err);
+                        else {
+                            var allusersPdf = fs.readFileSync("PDF/PaymentDetails.pdf");
+                            res.header("content-type", "application/pdf");
+                            res.send(allusersPdf);
+                            transporter.sendMail
+                                ({
+                                    from: '"Pets World" <petsworld0290@gmail.com>',
+                                    to: "mtakamboh@gmail.com",
+                                    subject: "Users Report",
+                                    text: "Hello world?",
+                                    html: `<h1>Payment Details</h1>
+                                       <p>This is Payment Report!</p>`,
+                                    attachments: [
+                                        {
+                                            filename: 'PaymentDetails.pdf',
+                                            path: path.join(__dirname, "../PDF/PaymentDetails.pdf")
+                                        }]
+                                });
+                        }
+                    })
+
+                }
+
+            )
+        });
+    }
+    
+
 module.exports =
 {
     userlogout,
@@ -699,6 +837,7 @@ module.exports =
     add_to_wishlist,
     view_wishlist,
     delete_from_wishlist,
+    resetpsw,
     /*--------------------------------------------------------*/
     Adminlogout,
     add,
@@ -711,5 +850,8 @@ module.exports =
     oders,
     canceloder,
     deliveredoder,
-    payment
+    payment,
+    viewfeedback,
+    dashboard,
+    paymentpdf
 }
