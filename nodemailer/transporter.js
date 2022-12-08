@@ -4,8 +4,8 @@ const nodemailer = require("nodemailer");
     host: "smtp.gmail.email",
     service: "gmail",
     auth: {
-      user: "petsworld0290@gmail.com",
-      pass: "zvrsrmzvoqiftdig",
+      user: "athleteworld00@gmail.com",
+      pass: "qurmeviimajqcmqv",
     },
   });
 module.exports = transporter;

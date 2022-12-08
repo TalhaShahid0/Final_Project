@@ -6,14 +6,13 @@
 }
 
 body{
-    
-    background: url(/images/pic1.JPG);
-    background-size: cover;
+    background-color: darkolivegreen;
+
 }
 
 .main-form{
     display: flex;
-    height: 100vh;
+    height: 90vh;
     justify-content: center;
     align-items: center;
 }
