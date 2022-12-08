@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/CSS/user/productDetails.css">
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <title>Product Details</title>
+</head>
+
+<body>
+  <!-- Header -->
+  <section id="header">
+    <div class="header container">
+      <div class="nav-bar">
+        <div class="brand1">
+          <a href="#hero">
+            <h1><span>P</span>ets <span>W</span>orld</h1>
+          </a>
+        </div>
+        <div class="nav-list">
+          <div class="hamburger">
+            <div class="bar"></div>
+          </div>
+          <ul>
+
+           
+            <li><a href="/products" data-after="Products">Products</a></li>
+           
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Header -->
+  <% data.forEach(function(item){ %>
+  <form action="/selectedproducts/<%= item.pid %>/<%=item.price%>" method="post">
+     <div class="hero">
+      <div class="row">
+        <div class="col">
+         <div class="slider">
+            <div class="preview">
+              <img src="/images/<%= item.picture %>" id="imagebox" alt="picture">
+            </div>
+          </div>
+
+        </div>
+        <div class="col">
+
+          <div class="content">
+            <p class="brand">ID: <%= item.pid %>
+            </p>
+            <h2>
+              <%= item.PName %>
+            </h2>
+            <div class="rating">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-half-o"></i>
+            </div>
+            <p class="price">
+              <%= item.Discription %>
+            </p>
+            <p class="price"> Catagory: <%= item.Catagory %>
+            </p>
+            <p class="price">
+              Rs <%= item.price %>
+            </p>
+            <div class="Quantity">
+            <span >Quantity</span>
+            <input type="number" max="10" min="1" value="1" name="quantity">
+          </div>
+            <button type="submit">
+              <i class="fa fa-shopping-cart"></i>
+              Add to cart</button>
+          </div>
+
+        </div>
+      </div>
+      </form>
+      <div class="center">
+
+        <form action="/comments/<%= item.pid %>" method="post">
+
+          <div class="txt_field">
+            <input type="text" placeholder="Add a Comment........" name="comments">
+
+          </div>
+          <input type="submit" value="Post a comment">
+
+        </form>
+      </div>
+      <% }); %>
+        <!-- For Displaying Comments  -->
+
+    </div>
+    <div class="commentsContainer">
+      <div class="item">
+        <h1>All Comments</h1>
+
+        <div class="content">
+          <% data2.forEach(function(item2){ %>
+            <p><Strong>
+                <%= item2.username %>
+              </Strong><br>
+              <%= item2.comment%>
+                <small>
+                  <%= item2.time%>
+                </small>
+            </p>
+            <% }); %>
+        </div>
+      </div>
+
+    </div>
+
+</body>
+
+</html>
