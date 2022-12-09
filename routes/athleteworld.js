@@ -32,8 +32,6 @@ router.post("/RegisterUser", functions.register);
 router.get("/Signin", (req, res) => { res.render("users/Signin"); });
 //routing for about
 router.get("/about", (req, res) => { res.render("users/about"); });
-//routing for blog-home
-router.get("/blog-home", (req, res) => { res.render("users/blog-home"); });
 //routing for blog-post
 router.get("/blog-post", (req, res) => { res.render("users/blog-post"); });
 //routing for contact
